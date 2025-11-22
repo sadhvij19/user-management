@@ -1,0 +1,263 @@
+/* src/components/UsersTable.module.css */
+
+/* --- 1. Variables and Global Reset (Scoped) --- */
+:root {
+    --bg-color: #1e1e2d; /* Dark Navy Background */
+    --card-color: #27293d; /* Slightly Lighter Card Background */
+    --text-color: #f0f0f0; /* Light Text */
+    --primary-color: #007bff; /* Vibrant Blue for Edit/Primary */
+    --danger-color: #dc3545; /* Red for Delete */
+    --hover-color: #35384d; /* Subtle hover/highlight */
+    --border-color: #3f425c;
+    --transition-speed: 0.3s;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: var(--bg-color); 
+    min-height: 100vh;
+    color: var(--text-color);
+}
+
+/* --- New: Loading and Error Styles --- */
+.loading, .error {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.errorBanner {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    animation: fadeIn 0.5s;
+}
+
+.noData {
+    text-align: center !important;
+    font-style: italic;
+    color: #999;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- 2. Initial Fade-In Animations --- */
+
+/* Header and Controls fade in slightly differently for a dynamic feel */
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeInDown 0.6s ease-out forwards;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeInDown 0.6s ease-out forwards;
+    animation-delay: 0.2s; /* Delay for controls */
+}
+
+.tableCard, .pagination {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+    animation-delay: 0.4s; /* Delay for table and pagination */
+}
+
+/* --- 3. Search and Primary Button Styling --- */
+.searchBox {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.searchBox input {
+    width: 300px;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--card-color);
+    color: var(--text-color);
+    transition: all var(--transition-speed) ease;
+}
+
+.searchBox input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.searchIcon {
+    position: absolute;
+    left: 15px;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.btnAddUser {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    background-color: var(--primary-color);
+    color: white;
+    transition: background-color var(--transition-speed) ease, transform 0.1s ease;
+}
+
+.btnAddUser svg {
+    margin-right: 8px;
+}
+
+.btnAddUser:hover {
+    background-color: #0056b3;
+}
+
+/* --- 4. Table Styling and Row Animation --- */
+.tableCard {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.userTable th, .userTable td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.userTable th {
+    background-color: #35384d;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    color: #b0b0b9;
+}
+
+/* Table Row Hover & Staggered Load */
+.userRow {
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    opacity: 0; 
+    
+    /* Apply Staggered Animation (uses --row-delay set in JSX) */
+    animation: fadeInUp 0.5s ease-out forwards;
+    animation-delay: calc(0.5s + var(--row-delay));
+}
+
+.userRow:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-2px); /* Subtle lift */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.userRow:last-child td {
+    border-bottom: none;
+}
+
+/* --- 5. Action Buttons --- */
+.actions button {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    margin-left: 5px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.btnEdit {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btnEdit:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btnDelete {
+    background-color: transparent;
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
+}
+
+.btnDelete:hover {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* --- 6. Pagination --- */
+.pagination {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pageBtn {
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.pageBtn:not(:disabled):hover {
+    background-color: var(--hover-color);
+}
+
+.pageBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pageBtn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* --- 7. Keyframe Definitions --- */
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
